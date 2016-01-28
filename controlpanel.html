@@ -1,0 +1,223 @@
+<div class="container">
+   <span class="col-sm-4">
+
+      <div class="control-section" style="margin: 0px;" ng-show="settings.workspace_show_zero">
+         <h4 class="text-center">Controle Manual</h4>
+         <div class="distributed-box">
+            <div class="stack" >
+               <button class="btn btn-info" 
+                  ng-click="relativeMove('X-')" ng-disabled="!machineService.homado"
+                  ng-mouseover="mostraAjuda('Controle Manual')"
+               ng-mouseleave="escondeAjuda()">
+               <span class="glyphicon glyphicon-chevron-left"></span>
+               -X
+               </button>
+            </div>
+            <div class="stack">
+               <button class="btn btn-info"
+                  ng-click="relativeMove('Y')" ng-disabled="!machineService.homado" ng-mouseover="mostraAjuda('Controle Manual')"
+               ng-mouseleave="escondeAjuda()">
+                  <span class="glyphicon glyphicon-chevron-up"></span>
+                  <div>+Y</div>
+               </button>
+               <br>
+               <button class="btn btn-info"
+                  ng-click="relativeMove('Y-')" ng-disabled="!machineService.homado" ng-mouseover="mostraAjuda('Controle Manual')"
+               ng-mouseleave="escondeAjuda()">
+                  <div>-Y</div>
+                  <span class="glyphicon glyphicon-chevron-down"></span>
+               </button>
+            </div>
+            <div class="stack">
+               <button class="btn btn-info"
+                  ng-click="relativeMove('X')" ng-disabled="!machineService.homado" ng-mouseover="mostraAjuda('Controle Manual')"
+               ng-mouseleave="escondeAjuda()">
+               +X
+               <span class="glyphicon glyphicon-chevron-right"></span>
+               </button>
+            </div>
+         </div>
+         <div>
+            <br>
+            <form class="form-inline" align="center" role="form" id="form-command-jog">
+               <div class="form-group">
+                  <div class="input-group">
+                     <input type="range" name="stepsize" id="input-stepsize" min="-1" max="2" class="range" ng-model="stepSize" ng-disabled="!machineService.isConnected" ng-mouseover="mostraAjuda('Define tamanho do passo no controle manual')"
+               ng-mouseleave="escondeAjuda()">
+                     <p><span><strong> Passo </span>{{getStepSize()}} [mm]</strong></p>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+
+      <div class="control-section" style="margin: 0px;" ng-show="settings.workspace_show_estop">
+         <label for="emergency-stop" class="sr-only">parada de emergencia
+         </label>
+         <div class="distributed-box lonely-centered">
+            <button id="btn-emergency-stop" name="emergency-stop"
+               class="btn btn-danger btn-estop"
+               ng-disabled="!machineService.isConnected"
+               ng-click="emergencyStop()"
+               ng-mouseover="mostraAjuda('EMERGENCIA. Parar e cancelar execução!')"
+               ng-mouseleave="escondeAjuda()">
+            <span class="glyphicon glyphicon-stop"></span>
+            </button>
+            <button class="btn btn-warning btn-estop"
+               ng-show="!ciclo_pausado"
+               ng-disabled="!machineService.isConnected"
+               ng-click="pausarExecucao()"
+               ng-mouseover="mostraAjuda('Pausar trabalho em andamento!')"
+               ng-mouseleave="escondeAjuda()">
+            <span class="glyphicon glyphicon-pause">
+            </span>
+            </button>
+
+            <button class="btn btn-success btn-estop"
+               ng-show="ciclo_pausado"
+               ng-disabled="!machineService.isConnected"
+               ng-click="retornaExecucao()"
+               ng-mouseover="mostraAjuda('Retoma trabalho em andamento!')"
+               ng-mouseleave="escondeAjuda()">
+            <span class="glyphicon glyphicon-play">
+            </span>
+            </button>
+            <!--    <button id="btn-pause" name="botao-pause" 
+               class="btn btn-warning btn-estop"
+               ng-click="pausarExecucao()">
+               <span class="glyphicon glyphicon-pause"></span>
+               </button> -->
+         </div>
+      
+
+         <div class="distributed-box lonely-centered">
+            <!-- <button class="btn btn-success flex"
+               ng-click="sendCommands(['G28\n'])"
+               ng-disabled="!machineService.isConnected">Inicio</button> -->
+            <button class="btn btn-primary flex"
+               ng-click="envia_homming()"
+               ng-disabled="!machineService.isConnected"ng-mouseover="mostraAjuda('Utilize para retornar a origem.')"
+               ng-mouseleave="escondeAjuda()">Homming</button>
+
+            <button class="btn btn-warning "
+               ng-click="sendCommands(['G92 X0 Y0 Z0\n'])"
+               ng-disabled="!machineService.isConnected"
+               ng-mouseover="mostraAjuda('Define a posição inicial de corte.')"
+               ng-mouseleave="escondeAjuda()">Seta Inicio</button>
+         </div>
+    </div>
+
+      <div class="control-section" style="margin: 0px;" ng-show="settings.workspace_show_spindle">
+         <hr>
+         <h4 class="text-center">Mira Laser</h4>
+         <div class="distributed-box">
+            <button class="btn btn-success flex"
+               ng-show="!laserligado"
+               ng-disabled="!machineService.isConnected"
+               ng-click="ligaLaser()"
+               ng-mouseover="mostraAjuda('Mira Laser: Utilize para posicionar')"
+               ng-mouseleave="escondeAjuda()">
+               <div>Ligar</div>
+               <span class="glyphicon glyphicon-screenshot"></span>
+            </button>
+            <button class="btn btn-danger flex"
+               ng-show="laserligado"
+               ng-disabled="!machineService.isConnected"
+               ng-click="desligaLaser()"
+               ng-mouseover="mostraAjuda('Desliga mira Laser')"
+               ng-mouseleave="escondeAjuda()">>
+               <div>Desligar</div>
+               <span class="glyphicon glyphicon-screenshot"></span>
+            </button>
+         </div>
+      </div>
+
+      <div id="ajuda" class="hidden" style=" margin: 5px; height: auto; text-align: center; color: #F39200; font-size: 100%; border: 2px solid #F39200"></div>
+
+   </span>
+
+   <span class="col-sm-8">
+      <div class="panel panel-default" >
+         <div class="panel-heading">
+            <table width="100%">
+               <tr>
+                  <td>
+                     <em ng-if="!fileService.fileName">Area de trabalho Vazia</em>
+                     <span ng-if="fileService.fileName">
+                     <strong>{{fileService.fileName}}</strong>
+                     <small>(Modificado {{fileService.fileLastModified}})</small>
+                     </span>
+                  </td>
+                  <td align="left">
+                     <span class="btn-toolbar-inline">
+                        <div class="btn-group btn-group-sm">
+                           <button class="btn btn-primary" ng-click="fileService.openFile()"
+
+                           ng-mouseover="mostraAjuda('Selecione um arquivo no formato gcode')"
+               ng-mouseleave="escondeAjuda()"
+               >
+                           <span class="glyphicon glyphicon-open"></span>
+                           Abrir arquivo
+                           </button>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                           <button class="btn btn-success" ng-click="sendFileToMachine()" ng-disabled="!machineService.isConnected"
+                           ng-mouseover="mostraAjuda('Inicia processo de corte ou marcação!')"
+               ng-mouseleave="escondeAjuda()"
+               >
+                           <span class="glyphicon glyphicon-print"></span>
+                           Due it!
+                           </button>
+                        </div>
+                     </span>
+                  </td>
+               </tr>
+            </table>
+         </div>
+         <div class="panel-body" id="render-canvas-holder">
+            <div id="warnings-render" class="alert alert-warning" hidden></div>
+            <canvas id="render-canvas"></canvas>
+         </div>
+         <div class="panel-footer">
+            <div id="info-render"></div>
+         </div>
+      </div>
+
+      <div class="panel panel-default" ng-show="settings.workspace_show_home">
+         <div class="panel-heading">
+            <div class="dropdown pull-right">
+               <button class="btn dropdown-toggle" type="button" id="console-menu" data-toggle="dropdown">
+               <span class="caret"></span>
+               </button>
+               <ul class="dropdown-menu" role="menu" aria-labelledby="console-menu">
+                  <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="machineService.logs = []">limpar log</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="machineService.commandQueue = []">Limprar fila de comandos</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="machineService.pendingAck = false">Cancelar espera do comando 'ok'</a></li>
+               </ul>
+            </div>
+            console
+            <small id="lbl-enqueued-commands">
+            ({{machineService.commandQueue.length}} Comandos na fila)
+            </small>
+            <span ng-show="machineService.pendingAck">~</span>
+         </div>
+         <div class="panel-body" id="console-container">
+            <div id="console-log" style="height: 10px" scroll-glue>
+               <div ng-repeat="l in logs track by $index"
+                  ng-class="{'is-ack': l.isAck, 'log-user-entry': !l.remoteSource, 'log-remote-entry': l.remoteSource}">{{l.msg}}</div>
+            </div>
+            <form class="form" role="form" ng-submit="sendManualCommand(manualCommand)">
+               <div class="input-group">
+                  <input type="text" class="form-control" id="input-control-cmd"
+                     ng-model="manualCommand" ng-disabled="!machineService.isConnected">
+                  <div class="input-group-btn">
+                     <button type="submit" class="btn btn-default"
+                        ng-disabled="!machineService.isConnected">Enviar</button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </span>
+
+</div>

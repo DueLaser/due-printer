@@ -1,0 +1,81 @@
+<div class="container">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Comunicação
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" role="form" action="#">
+          <div class="form-group">
+            <label for="port" class="col-sm-2 control-label">Porta</label>
+            <div class="col-sm-10">
+              <select name="port" class="form-control"
+                  ng-model="settings.workspace_port">
+                  <option ng-value="path" ng-repeat="path in deviceHolder.devices">{{path}}</option>
+              </select>
+            </div>
+            <span class="help-block col-sm-offset-2">Escolha a porta Serial.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="bottom-margin">
+      <button type="submit" class="btn btn-primary wide" ng-click="saveSettings()">Salvar</button>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Controles
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" role="form" action="#">
+          <label class="checkbox-inline">
+            <input name="show-zero" type="checkbox" ng-model="settings.workspace_show_zero">
+            Mostrar controle manual
+          </label>
+          <br>
+          <label class="checkbox-inline">
+            <input name="show-estop" type="checkbox" ng-model="settings.workspace_show_estop">
+            Mostrar controle de parar
+          </label>
+          <br/>
+          <label class="checkbox-inline">
+            <input name="show-spindle" type="checkbox" ng-model="settings.workspace_show_spindle">
+            Mostrar controles do Laser
+          </label>
+          <br/>
+          <label class="checkbox-inline">
+            <input name="show-home" type="checkbox" ng-model="settings.workspace_show_home">
+            Mostrar console
+          </label>
+          <br/>          
+        </form>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Configurações de movimento
+      </div>
+      <div class="panel-body">
+        <form class="form" role="form" action="#">
+           <div class="form-group">
+            <label for="input-jog-feedrate" class="control-label">Velocidade</label>
+            <input id="input-jog-feedrate" class="form-control" type="number" min="0"
+                ng-model="settings.workspace_jog_feedrate">
+            <p class="help-block">Velocidade quando não esta cortando (mm/min).</p>
+          </div>
+
+          <label class="checkbox-inline">
+            <input id="input-jog-rapid" type="checkbox" ng-model="settings.workspace_jog_rapid">
+            Movimento rapido (G0)
+            <p class="help-block">Mais rápido, mas não linear.</p>
+          </label>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
